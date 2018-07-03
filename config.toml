@@ -1,0 +1,4 @@
+baseURL = "https://netauth.org"
+languageCode = "en-us"
+title = "NetAuth: Authentication and Identity"
+theme = "hugo-classic"
