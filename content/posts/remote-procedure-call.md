@@ -16,7 +16,7 @@ fond of JSON and its not the easiest interchange format to do things
 with.
 
 So if JSON is out, what other formats are available?  Well, there's
-always XML, but as mentioned in the first post (Git Init) the goal is
+always XML, but as mentioned in [the first post](git-init.md) the goal is
 to build something that feels like its from the Sun days, and XML does
 not feel like that at all.
 
