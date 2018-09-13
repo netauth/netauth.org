@@ -5,7 +5,7 @@ date: 2018-09-12T22:14:48-07:00
 
 ![NetAuth Logo](/img/NetAuthLock.png)
 
-[About/FAQ](/about) | [Docs](https://docs.netauth.org) | [Contact](/contact)
+[About/FAQ](/about) | [Docs](https://docs.netauth.org) | [Source](https://github.com/NetAuth) | [Contact](/contact)
 
 ### NetAuth is an easy to deploy, easy to use authentication and identity provider.
 
