@@ -9,6 +9,7 @@ date: 2018-09-12T22:14:48-07:00
 
 [![Build Status](https://travis-ci.org/NetAuth/NetAuth.svg?branch=master)](https://travis-ci.org/NetAuth/NetAuth)
 [![GoDoc](https://godoc.org/github.com/NetAuth/NetAuth?status.svg)](https://godoc.org/github.com/NetAuth/NetAuth)
+[![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/NetAuth/NetAuth/blob/master/LICENSE)
 
 ### NetAuth is an easy to deploy, easy to use authentication and identity provider.
 
