@@ -18,7 +18,7 @@ pam_netauth.
 Systems that use glibc to access the passwd and group databases can
 make use of nsscache to generate appropriate files for libnss-cache.
 
-## NetKeys
+## [NetKeys](netkeys/)
 
 Need to obtain keys from NetAuth for another system?  NetKeys can do
 this and is an ideal drop in to use with OpenSSH's
