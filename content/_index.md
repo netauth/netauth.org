@@ -5,7 +5,7 @@ date: 2018-09-12T22:14:48-07:00
 
 ![NetAuth Logo](/img/NetAuthLock.png)
 
-[About/FAQ](/about) | [Docs](https://docs.netauth.org) | [Source](https://github.com/NetAuth) | [Contact](/contact)
+[About/FAQ](/about) | [Ecosystem](/ecosystem) | [Docs](https://docs.netauth.org) | [Source](https://github.com/NetAuth) | [Contact](/contact)
 
 [![Build Status](https://travis-ci.org/NetAuth/NetAuth.svg?branch=master)](https://travis-ci.org/NetAuth/NetAuth)
 [![GoDoc](https://godoc.org/github.com/NetAuth/NetAuth?status.svg)](https://godoc.org/github.com/NetAuth/NetAuth)
