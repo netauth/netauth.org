@@ -13,7 +13,7 @@ Most Linux and some BSD systems use Pluggable Authentication Modules
 to authenticate users.  NetAuth can interface with PAM using
 pam_netauth.
 
-## nsscache
+## [nsscache](nsscache/)
 
 Systems that use glibc to access the passwd and group databases can
 make use of nsscache to generate appropriate files for libnss-cache.
