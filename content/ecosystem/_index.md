@@ -7,7 +7,7 @@ NetAuth isn't a single isolated daemon and command line tool, there's
 a suite of software that plugs into it to create a functional service
 landscape.  This page details this software.
 
-## pam_netauth
+## [pam_netauth](pam_netauth/)
 
 Most Linux and some BSD systems use Pluggable Authentication Modules
 to authenticate users.  NetAuth can interface with PAM using
