@@ -1,6 +1,6 @@
 ---
 title: "Lint Trap"
-date: 2018-07-05T17:26:20-07:00
+date: 2018-06-30T17:26:20-07:00
 ---
 
 Most programming languages have linters.  Go is no exception.
