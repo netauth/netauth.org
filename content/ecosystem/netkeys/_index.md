@@ -3,6 +3,7 @@ title: "NetKeys"
 date: 2018-09-25T15:49:54-07:00
 ---
 
+[![Build Status](https://travis-ci.org/NetAuth/NetKeys.svg?branch=master)](https://travis-ci.org/NetAuth/NetKeys)
 [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/NetAuth/NetKeys/blob/master/LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/NetAuth/NetKeys)](https://goreportcard.com/report/github.com/NetAuth/NetKeys)
 
