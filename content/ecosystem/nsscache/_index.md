@@ -2,6 +2,8 @@
 title: "nsscache"
 date: 2018-09-25T14:08:15-07:00
 ---
+
+[![Build Status](https://travis-ci.org/NetAuth/nsscache.svg?branch=master)](https://travis-ci.org/NetAuth/nsscache)
 [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/NetAuth/nsscache/blob/master/LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/NetAuth/nsscache)](https://goreportcard.com/report/github.com/NetAuth/nsscache)
 
