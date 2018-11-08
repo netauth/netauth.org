@@ -9,7 +9,7 @@ decisions and drove a lot of features that were needed in the initial
 launch.
 
 Lets dig a bit deeper into how Void Linux is using NetAuth to secure
-its servers and provide centralized management of resourced.  An
+its servers and provide centralized management of resources.  An
 important note for this article: the principal author of NetAuth
 (`maldridge`) is also the infrastructure lead for Void Linux.
 
