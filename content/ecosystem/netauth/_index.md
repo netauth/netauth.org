@@ -34,7 +34,7 @@ security backports.
 To compile NetAuth you'll need a working Golang compiler at version
 1.10 or better.  You'll also need `dep`, the Go package manager.
 
-```
+```shell
 $ mkdir -p $GOPATH/src/github.com/NetAuth
 $ cd $GOPATH/src/github.com/NetAuth
 $ git clone -b <version> https://github.com/NetAuth/NetAuth
@@ -54,23 +54,14 @@ secure use, usually `/usr/local/sbin`.
 Configuration is really best left to the manual linked above, but for
 a quickstart there's two important things to note:
 
-### netauth.toml
-
-The `netauth.toml` file is examined by the NetAuth client library
-which is linked into all tools and programs that can communicate with
-the server.  You should create this file and include some content in
-it so that your client can find your server.  An example file is as
-shown:
+A config file for this demo should be created with the following content:
 
 ```toml
-Server="mynetauthserver.internal"
+[core]
+  home="tmp"
+[tls]
+  pwn_me = true
 ```
-
-This file is normally read from `/etc/netauth.toml` but for testing
-things and for circumstances where you might need to override things,
-you can override this path with the environment variable `NACLCONFIG`
-which can contain either a relative or absolute path to the config
-file you wish to use.
 
 ### Certificates
 
@@ -79,8 +70,8 @@ information must be protected while in transit, and NetAuth uses TLS
 to ensure this security.  While TLS is a must for a production setup,
 it can be annoying to deal with while doing a local demo or otherwise
 just trying out NetAuth.  If you want to turn off TLS and understand
-the risks that are associated with this the `-PWN_ME` flag can be used
-to disable TLS.
+the risks that are associated with this the `-tls.PWN_ME` flag can be
+used to disable TLS.
 
 This flag is no joke, you will be sending passwords in the clear.
 Anyone on your network with the knowhow to do so can sniff these
@@ -98,11 +89,7 @@ and a group, and authenticate as that entity:
 Open a terminal and start the NetAuth server with the options as shown:
 
 ```bash
-$ netauthd --PWN_ME \
- --jwt_rsa_generate \
- --jwt_rsa_privatekey token.key \
- --jwt_rsa_publickey token.pem \
- --make_bootstrap root:password
+$ netauthd --tls.PWN_ME --token.jwt.generate --server.bootstrap root:password
 ```
 
 This will start your server and generate a set of keys that can be
@@ -158,54 +145,63 @@ like the following:
 
 ### Using NetAuth
 
-Now we'll do a few things with the server that's running.  To make
-things easier, lets alias some flags for a new shell:
+Now we'll do a few things with the server that's running.  As long as
+you run from the same directory that contains yoru config.toml, this
+demo will work.  Otherwise you will encounter errors that your server
+does not support TLS.  Since your user locally likely doesn't match
+the bootstrap user (don't run this demo as root!), create the
+following alias in the terminal you'll do the rest of the demo in:
 
-```shell
-$ alias netauth="netauth --PWN_ME --jwt_rsa_publickey=token.pem --entity root"
+```
+alias netauth="netauth --entity root"
 ```
 
 Now we'll add an entity and get information on them:
 
 ```shell
-$ netauth create-entity --ID foo --secret bar
+$ netauth entity create myuser
 Secret:
+Initial Secret for myuser:
 New entity created successfully
-$ netauth entity-info --entity foo
-ID: foo
+
+$ netauth entity info myuser
+ID: myuser
 Number: 2
 ```
 
 Now lets add a group and get information on it:
 
 ```shell
-$ netauth create-group --name myGroup --display_name "My First Group"
+$ netauth group create mygroup --display-name "My First Group"
 New group created successfully
-$ netauth group-info --group myGroup
-Name: myGroup
+
+$ netauth group info mygroup
+Name: mygroup
 Display Name: My First Group
 Number: 1
 ```
 
-Now we will put foo into myGroup and see the membership shows the
-entity foo as a member:
+Now we will put myuser into mygroup and see the membership shows the
+entity myuser as a member:
 
 ```shell
-$ netauth entity-membership --entity foo --group myGroup --add
+$ netauth entity membership myuser add mygroup
 Membership updated successfully
-$ netauth list-members --group myGroup
-ID: foo
+
+$ netauth group members mygroup
+ID: myuser
 Number: 2
 ```
 
-Finally we can authenticate as foo and inspect the resulting token:
+Finally we can authenticate as myuser and inspect the resulting token:
 
 ```shell
-$ netauth --entity foo get-token
+$ netauth --entity myuser auth get-token
 Secret:
 Token obtained
-$ netauth --entity foo inspect-token
-{foo [] 5}
+
+$ netauth --entity myuser auth inspect-token
+{myuser [] 5}
 ```
 
 You can see the token was obtained and the token contents dumped in
@@ -216,19 +212,14 @@ machine format.
 From the server's perspective, here's what happened:
 
 ```text
-YYYY/MM/DD HH:MM:SS Token requested for root (netauthctl@deepblue)
-YYYY/MM/DD HH:MM:SS Successfully authenticated 'root'
-YYYY/MM/DD HH:MM:SS Secret set for 'foo'
-YYYY/MM/DD HH:MM:SS Created entity 'foo'
-YYYY/MM/DD HH:MM:SS New entity 'foo' created by 'root' (netauthctl@deepblue)
-YYYY/MM/DD HH:MM:SS Info requested on 'foo' (netauthctl@deepblue)
-YYYY/MM/DD HH:MM:SS Allocated new group 'myGroup'
-YYYY/MM/DD HH:MM:SS New Group 'myGroup' created by 'root' (netauthctl@deepblue)
-YYYY/MM/DD HH:MM:SS Information on myGroup requested (netauthctl@deepblue)
-YYYY/MM/DD HH:MM:SS Entity 'foo' added to 'myGroup' by 'root' (netauthctl@deepblue)
-YYYY/MM/DD HH:MM:SS Membership of 'myGroup' requested (netauthctl@deepblue)
-YYYY/MM/DD HH:MM:SS Token requested for foo (netauthctl@deepblue)
-YYYY/MM/DD HH:MM:SS Successfully authenticated 'foo'
+2019/03/25 21:31:58 Authenticating root (netauth@theGibson)
+2019/03/25 21:34:02 Token requested for root (netauth@theGibson)
+2019/03/25 21:34:13 New entity 'myuser' created by 'root' (netauth@theGibson)
+2019/03/25 21:34:41 Info requested on 'myuser' (netauth@theGibson)
+2019/03/25 21:36:33 New Group 'mygroup' created by 'root' (netauth@theGibson)
+2019/03/25 21:38:31 Information on mygroup requested (netauth@theGibson)
+2019/03/25 21:41:17 Entity 'myuser' added to 'mygroup' by 'root' (netauth@theGibson)
+2019/03/25 21:44:30 Token requested for myuser (netauth@theGibson)
 ```
 
 There's plenty more that NetAuth is capable of, this is just a 5
