@@ -25,21 +25,18 @@ enough to get up and running to evaluate NetAuth.
 
 ## Installation
 
-NetAuth is not available in compiled form from the project directly,
-you may compile it yourself or obtain it from your distribution's
-package manager.  On Debian derived systems ensure that you are
-getting a recent vresion as the NetAuth project does not offer
-security backports.
+NetAuth is provided pre-compiled on the release page for each release
+on GitHub after 0.1.0.  Running versions prior to 0.1.0 in production
+is discouraged.  On Debian derived systems ensure that you are getting
+a recent vresion as the NetAuth project does not offer security
+backports.
 
-To compile NetAuth you'll need a working Golang compiler at version
-1.10 or better.  You'll also need `dep`, the Go package manager.
+If you would prefer to compile NetAuth instead, you can compile it
+with Go 1.11 or better:
 
 ```shell
-$ mkdir -p $GOPATH/src/github.com/NetAuth
-$ cd $GOPATH/src/github.com/NetAuth
 $ git clone -b <version> https://github.com/NetAuth/NetAuth
 $ cd NetAuth
-$ dep ensure
 $ go build -o netauthd cmd/netauthd/main.go
 $ go build -o netauth cmd/netauth/main.go
 ```
@@ -102,124 +99,157 @@ if you want to use the ID 'root' it is recommended to instead use
 like the following:
 
 ```text
-2018/09/25 21:21:59 NetAuth server is starting!
-2018/09/25 21:21:59 Server bound on localhost:8080
-2018/09/25 21:21:59 ===================================================================
-2018/09/25 21:21:59   WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
-2018/09/25 21:21:59 ===================================================================
-2018/09/25 21:21:59
-2018/09/25 21:21:59 Launching without TLS! Your passwords will be shipped in the clear!
-2018/09/25 21:21:59 Seriously, the option is --PWN_ME for a reason, you're trusting the
-2018/09/25 21:21:59 network fabric with your authentication information, and this is a
-2018/09/25 21:21:59 bad idea.  Anyone on your local network can get passwords, tokens,
-2018/09/25 21:21:59 and other secure information.  You should instead obtain a
-2018/09/25 21:21:59 certificate and key and start the server with those.
-2018/09/25 21:21:59
-2018/09/25 21:21:59 ===================================================================
-2018/09/25 21:21:59   WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
-2018/09/25 21:21:59 ===================================================================
-2018/09/25 21:21:59 The following DB backends are registered:
-2018/09/25 21:21:59   ProtoDB
-2018/09/25 21:21:59 The following crypto implementations are registered:
-2018/09/25 21:21:59   bcrypt
-2018/09/25 21:21:59 The following token services are registered:
-2018/09/25 21:21:59   jwt-rsa
-2018/09/25 21:21:59 Initializing new Entity Tree with ProtoDB and bcrypt
-2018/09/25 21:21:59 Initialized new Entity Manager
-2018/09/25 21:21:59 Initializing token service
-2018/09/25 21:21:59 Warning: No token implementation selected, using only registered option...
-2018/09/25 21:21:59 Loading public key from token.pem
-2018/09/25 21:21:59 Blob at token.pem contains no key!
-2018/09/25 21:21:59 Generating keys
-2018/09/25 21:22:00 Keys successfully generated
-2018/09/25 21:22:00 Commencing Bootstrap
-2018/09/25 21:22:00 No entity with ID 'root' exists!  Creating...
-2018/09/25 21:22:04 Secret set for 'root'
-2018/09/25 21:22:04 Created entity 'root'
-2018/09/25 21:22:04 Set capability GLOBAL_ROOT on entity 'root'
-2018/09/25 21:22:04 Bootstrap phase complete
-2018/09/25 21:22:04 Disabling bootstrap
-2018/09/25 21:22:04 Bootstrap disabled
-2018/09/25 21:22:04 Ready to Serve...
+2019-09-16T21:50:35.014-0700 [INFO]  netauthd: NetAuth server is starting!
+2019-09-16T21:50:35.015-0700 [WARN]  netauthd: ===================================================================
+2019-09-16T21:50:35.015-0700 [WARN]  netauthd:   WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
+2019-09-16T21:50:35.015-0700 [WARN]  netauthd: ===================================================================
+2019-09-16T21:50:35.015-0700 [WARN]  netauthd:
+2019-09-16T21:50:35.015-0700 [WARN]  netauthd: Launching without TLS! Your passwords will be shipped in the clear!
+2019-09-16T21:50:35.015-0700 [WARN]  netauthd: Seriously, the option is --PWN_ME for a reason, you're trusting the
+2019-09-16T21:50:35.015-0700 [WARN]  netauthd: network fabric with your authentication information, and this is a
+2019-09-16T21:50:35.015-0700 [WARN]  netauthd: bad idea.  Anyone on your local network can get passwords, tokens,
+2019-09-16T21:50:35.015-0700 [WARN]  netauthd: and other secure information.  You should instead obtain a
+2019-09-16T21:50:35.015-0700 [WARN]  netauthd: certificate and key and start the server with those.
+2019-09-16T21:50:35.015-0700 [WARN]  netauthd:
+2019-09-16T21:50:35.015-0700 [WARN]  netauthd: ===================================================================
+2019-09-16T21:50:35.015-0700 [WARN]  netauthd:   WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
+2019-09-16T21:50:35.015-0700 [WARN]  netauthd: ===================================================================
+2019-09-16T21:50:35.015-0700 [INFO]  netauthd: The following DB backends are registered:
+2019-09-16T21:50:35.015-0700 [INFO]  netauthd:   ProtoDB
+2019-09-16T21:50:35.015-0700 [INFO]  netauthd: The following crypto implementations are registered:
+2019-09-16T21:50:35.015-0700 [INFO]  netauthd:   bcrypt
+2019-09-16T21:50:35.015-0700 [INFO]  netauthd: The following token services are registered:
+2019-09-16T21:50:35.015-0700 [INFO]  netauthd:   jwt-rsa
+2019-09-16T21:50:35.017-0700 [INFO]  netauthd: Database initialized: backend=ProtoDB
+2019-09-16T21:50:35.017-0700 [INFO]  netauthd: Cryptography system initialized: backend=bcrypt
+2019-09-16T21:50:35.017-0700 [ERROR] netauthd.jwt-rsa: File contains no key!: file=tmp/keys/token.pem
+2019-09-16T21:50:35.123-0700 [INFO]  netauthd: Token backend successfully initialized: backend=jwt-rsa
+2019-09-16T21:50:35.123-0700 [INFO]  netauthd: Beginning Bootstrap
+2019-09-16T21:50:39.828-0700 [INFO]  netauthd.tree: Bootstrap disabled
+2019-09-16T21:50:39.829-0700 [INFO]  netauthd: Bootstrap complete
+2019-09-16T21:50:39.829-0700 [INFO]  netauthd.tree: Bootstrap disabled
+2019-09-16T21:50:39.829-0700 [INFO]  netauthd: Ready to Serve...
 ```
+
+We can confirm the claim made in the last line by invoking the system
+ping command on the CLI:
+
+```shell
+$ netauth system ping
+NetAuth server on theGibson is ready
+
+System Check Status: PASS
+
+Subsystems:
+[PASS]  ProtoDBProtoDB is operating normally
+[PASS]  TKN_JWT-RSAJWT-RSA TokenService is ready to issue/verify tokens
+```
+
 
 ### Using NetAuth
 
 Now we'll do a few things with the server that's running.  As long as
 you run from the same directory that contains yoru config.toml, this
 demo will work.  Otherwise you will encounter errors that your server
-does not support TLS.  Since your user locally likely doesn't match
-the bootstrap user (don't run this demo as root!), create the
-following alias in the terminal you'll do the rest of the demo in:
+does not support TLS.
 
-```
-alias netauth="netauth --entity root"
-```
+To make the following commands shorter, we will export the
+`NETAUTH_ENTITY` environment variable so that NetAuth knows we want to
+make requests as root.
 
-Now we'll add an entity and get information on them:
+First we can check our authentication information:
 
 ```shell
-$ netauth entity create myuser
+$ netauth auth check
 Secret:
-Initial Secret for myuser:
+Entity authentication succeeded
+```
+
+Now that we know our credentials work, lets get a token for future
+requests:
+
+```shell
+$ netauth auth get-token
+Token obtained
+```
+
+The token contains some interesting information, so lets take a look
+at it:
+
+```shell
+$ netauth auth inspect-token
+This token was issued to 'root'
+ Capabilities:
+   - GLOBAL_ROOT
+```
+
+Here you can see that the token contains the `GLOBAL_ROOT` capability
+which is what allows us to do interesting things while on the server.
+
+
+Right now though, the server only has a single entity present, lets
+add another one and then inspect it:
+
+```shell
+$ netauth entity create entity1
+Initial Secret for entity1:
 New entity created successfully
 
-$ netauth entity info myuser
-ID: myuser
+$ netauth entity info entity1
+ID: entity1
 Number: 2
 ```
 
 Now lets add a group and get information on it:
 
 ```shell
-$ netauth group create mygroup --display-name "My First Group"
+$ netauth group create group1 --display-name "My First Group"
 New group created successfully
 
 $ netauth group info mygroup
-Name: mygroup
+Name: group1
 Display Name: My First Group
 Number: 1
 ```
 
-Now we will put myuser into mygroup and see the membership shows the
+Now we will put entity1 into group1 and see the membership shows the
 entity myuser as a member:
 
 ```shell
-$ netauth entity membership myuser add mygroup
+$ netauth entity membership entity1 add group1
 Membership updated successfully
 
-$ netauth group members mygroup
-ID: myuser
+$ netauth group members group1
+ID: entity1
 Number: 2
 ```
 
 Finally we can authenticate as myuser and inspect the resulting token:
 
 ```shell
-$ netauth --entity myuser auth get-token
+$ netauth --entity entity1 auth get-token
 Secret:
 Token obtained
 
-$ netauth --entity myuser auth inspect-token
-{myuser [] 5}
+$ netauth --entity entity1 auth inspect-token
+This token was issued to 'entity1'
+ Capabilities:
 ```
-
-You can see the token was obtained and the token contents dumped in
-machine format.
 
 ### Wrapping Up
 
 From the server's perspective, here's what happened:
 
 ```text
-2019/03/25 21:31:58 Authenticating root (netauth@theGibson)
-2019/03/25 21:34:02 Token requested for root (netauth@theGibson)
-2019/03/25 21:34:13 New entity 'myuser' created by 'root' (netauth@theGibson)
-2019/03/25 21:34:41 Info requested on 'myuser' (netauth@theGibson)
-2019/03/25 21:36:33 New Group 'mygroup' created by 'root' (netauth@theGibson)
-2019/03/25 21:38:31 Information on mygroup requested (netauth@theGibson)
-2019/03/25 21:41:17 Entity 'myuser' added to 'mygroup' by 'root' (netauth@theGibson)
-2019/03/25 21:44:30 Token requested for myuser (netauth@theGibson)
+2019-09-16T21:51:40.368-0700 [INFO]  netauthd.rpc: Ping: service=netauth client=theGibsoncrypt
+2019-09-16T21:55:40.332-0700 [INFO]  netauthd.rpc: Authenticating Entity: entity=root service=netauth client=theGibson
+2019-09-16T21:57:35.485-0700 [INFO]  netauthd.rpc: Token requested: entity=root service=netauth client=theGibson
+2019-09-16T21:59:35.501-0700 [INFO]  netauthd.rpc: New entity created: entity=entity1 authority=root service=netauth client=theGibson
+2019-09-16T22:00:21.035-0700 [INFO]  netauthd.rpc: Entity information request: entity=entity1 service=netauth client=theGibson
+2019-09-16T22:00:49.066-0700 [INFO]  netauthd.rpc: New Group Created: group=group1 authority=root service=netauth client=theGibson
+2019-09-16T22:01:10.707-0700 [INFO]  netauthd.rpc: Group information request: group=group1 service=netauth client=theGibson
+2019-09-16T22:01:33.940-0700 [INFO]  netauthd.rpc: Direct group membership changed: entity=entity1 group=group1 action=add authority=root service=netauth client=theGibson
+2019-09-16T22:02:24.015-0700 [INFO]  netauthd.rpc: Token requested: entity=entity1 service=netauth client=theGibson
 ```
 
 There's plenty more that NetAuth is capable of, this is just a 5
