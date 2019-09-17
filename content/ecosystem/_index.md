@@ -28,6 +28,12 @@ Need to obtain keys from NetAuth for another system?  NetKeys can do
 this and is an ideal drop in to use with OpenSSH's
 AuthorizedKeysCommand.
 
+## [Plugins](plugin)
+
+The core server can be extended by using plugins to augment the
+default behavior.  Plugins can either change built-in behaviors, or
+can propagate events to external systems.
+
 ## [Raw gRPC](https://github.com/NetAuth/Protocol)
 
 Don't see what you're looking for here?  You can develop your own
