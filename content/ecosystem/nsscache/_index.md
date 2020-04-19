@@ -7,6 +7,9 @@ date: 2018-09-25T14:08:15-07:00
 [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/NetAuth/nsscache/blob/master/LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/NetAuth/nsscache)](https://goreportcard.com/report/github.com/NetAuth/nsscache)
 
+**Note: nsscache is in maintenance mode.  You are strongly encouraged
+to use [`localize`](../localizer).**
+
 Linux systems derive user and group information from a set of
 databases.  On some systems it is possible to load multiple databases
 via the Name Service Switch.  `nsscache` can write a set of files that
