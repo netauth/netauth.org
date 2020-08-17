@@ -13,9 +13,13 @@ The core server itself and the command line tools.
 
 ## [pam_netauth](pam_netauth/)
 
+Deprecated: See pam-helper instead.
+
+## [pam-helper](pam-helper)
+
 Most Linux and some BSD systems use Pluggable Authentication Modules
 to authenticate users.  NetAuth can interface with PAM using
-pam_netauth.
+pam-helper.
 
 ## [localizer](localizer/)
 

@@ -3,6 +3,12 @@ title: "pam_netauth"
 date: 2018-09-25T01:12:27-07:00
 ---
 
+*DEPRECATION NOTICE: The legacy `pam_netauth.so` mechanism is
+deprecated and should not be used.  It relies on FFI interfaces that
+are difficult to test and maintain and is no longer under active
+development.  Additionally it does not work on non-glibc systems.  You
+should use [pam-helper](../pam-helper/) instead.*
+
 [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/NetAuth/pam_netauth/blob/master/LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/NetAuth/pam_netauth)](https://goreportcard.com/report/github.com/NetAuth/pam_netauth)
 
@@ -61,7 +67,7 @@ shown below that includes the recommended approach with
 libpam-policycache.  `pam_netauth` implements the `auth` service only.
 
 Note that for `pam_netauth` to work, you will need an existing NetAuth
-configuration file installed at `/etc/netauth.toml`.
+configuration file installed at `/etc/netauth/config.toml`.
 
 Example `system-auth`:
 
