@@ -61,26 +61,26 @@ How do I hook up other things to NetAuth?
 
 There are several systems available to plug in to NetAuth.  For Linux
 hosts you can use
-[pam_netauth](https://github.com/NetAuth/pam_netauth) and
-[nsscache](https://github.com/NetAuth/nsscache).  If you want to pull
+[pam-helper](/ecosystem/pam-helper/) and
+[localizer](/ecosystem/localizer/).  If you want to pull
 ssh keys, then you probably want
-[NetKeys](https://github.com/NetAuth/NetKeys).
+[NetKeys](/ecosystem/netkeys/).
 
-Other modules are coming, if you want to help out, reach out in
-`#netauth-dev` on freenode.
+Other modules are in development, if you want to help out, reach out
+in `#netauth-dev` on freenode.
 
 Do you recommend using NetAuth for super important things?
 ----------------------------------------------------------
 
-Probably not.  I am a single engineer working with my own body of
-knowledge.  I do not have a background in crypto or auth systems, and
-so I am depending on authors of the libraries I have chosen to use.
-If you see a problem or have such a background, please reach out to
-me.  For security bugs please take care that you do not accidentally
-disclose security issues before they are made public.
+Like all software that runs in a security critical context, it is
+important to determine what your allowable risks are.  NetAuth is
+developed by a very small team and has not undergone a formal audit.
+That being said, it is an extremely well documented codebase, and has
+very high test coverage.
 
-That being said, there are a few installations of NetAuth in the "real
-world" that have "real users".  These users seem reasonably satisfied.
+NetAuth is also designed to be very hard to misconfigure.  It is much
+easier to configure an LDAP server in such a way that it will leak
+passwords than to leak passwords from a NetAuth server.
 
 Why wouldn't you use LDAP and Kerberos?  Why did you build this?
 ----------------------------------------------------------------
