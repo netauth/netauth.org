@@ -4,7 +4,7 @@ date: 2018-09-25T20:24:08-07:00
 ---
 
 [![Build Status](https://travis-ci.org/NetAuth/NetAuth.svg?branch=master)](https://travis-ci.org/NetAuth/NetAuth)
-[![GoDoc](https://godoc.org/github.com/NetAuth/NetAuth?status.svg)](https://godoc.org/github.com/NetAuth/NetAuth)
+[![GoDoc](https://godocs.io/github.com/NetAuth/NetAuth?status.svg)](https://godocs.io/github.com/NetAuth/NetAuth)
 [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/NetAuth/NetAuth/blob/master/LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/NetAuth/NetAuth)](https://goreportcard.com/report/github.com/NetAuth/NetAuth)
 
