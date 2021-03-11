@@ -27,9 +27,7 @@ enough to get up and running to evaluate NetAuth.
 
 NetAuth is provided pre-compiled on the release page for each release
 on GitHub after 0.1.0.  Running versions prior to 0.1.0 in production
-is discouraged.  On Debian derived systems ensure that you are getting
-a recent vresion as the NetAuth project does not offer security
-backports.
+is discouraged.
 
 If you would prefer to compile NetAuth instead, you can compile it
 with Go 1.11 or better:
@@ -45,6 +43,37 @@ This will produce a pair of executable files `netauth` and `netauthd`.
 Per convention, `netauthd` is the server executable.  You may copy
 these to where your system keeps user installed applications for
 secure use, usually `/usr/local/sbin`.
+
+You can also obtain both the server and command line client in Docker
+container format from the GitHub Container Registry.  The containers
+may be pulled as shown below:
+
+```
+$ docker pull ghcr.io/netauth/netauth:v0.4.0-rc1
+$ docker pull ghcr.io/netauth/netauthd:v0.4.0-rc1
+```
+
+To make the containerized versions behave like local binaries, the
+following aliases may be employed (adjust the version as needed):
+
+```
+$ alias netauth="docker run --rm -it -v $PWD/config.toml:/etc/netauth/config.toml -e USER=admin --network host ghcr.io/netauth/netauth:v0.4.0-rc1"
+$ alias netauthd="docker run --rm -it -v $PWD/config.toml:/etc/netauth/config.toml --network host ghcr.io/netauth/netauthd:v0.4.0-rc1"
+```
+
+Note that some things don't work normally in the docker containers:
+
+  * User detection doesn't work, you need to set your default user
+    explicitly by exporting the USER environment variable.
+  * Prompts that manipulate the terminal control registers, such as
+    secret prompts, don't work and you must pass secrets via explicit
+    flags.
+
+Due to these shortcomings the CLI container is provided mostly for
+demos and for the rare case where a container is the only format you
+can source the tools from.  In all other environments you should
+source the CLI from a package or an unencapsulated binary.  The server
+on the other hand is fine to run from a container.
 
 ## Configuration
 
