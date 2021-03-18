@@ -21,6 +21,10 @@ Most Linux and some BSD systems use Pluggable Authentication Modules
 to authenticate users.  NetAuth can interface with PAM using
 pam-helper.
 
+## [ldap](ldap/)
+
+Connect systems that understand simple LDAP queries to NetAuth.
+
 ## [localizer](localizer/)
 
 Map your NetAuth entities and groups into Linux systems.
