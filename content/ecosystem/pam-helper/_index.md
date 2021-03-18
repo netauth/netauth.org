@@ -24,7 +24,7 @@ you are strongly encouraged to use it.  Verify though that it is a
 recent version, especially if you are on a Debian derived
 distribution.
 
-Compiling from source follows the standard process for Go executables.
+Precompiled binaries are also available from the GitHub releases page.
 
 ## Configuration
 
