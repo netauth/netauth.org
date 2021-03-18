@@ -19,18 +19,8 @@ you are strongly encouraged to use this, though if your distribution
 happens to be Debian derived, make sure you're getting a version
 that's somewhat recent.
 
-If your distribution does not provide `NetKeys`, you'll need to
-build it from source.  It is assumed that you have a Go installation
-of version 1.10 or later and the `dep` Go dependency manager.
-
-Now you can build `NetKeys`:
-
-```
-$ git clone -b <version> https://github.com/NetAuth/NetKeys
-$ cd NetKeys
-$ dep ensure
-$ go build -o netkeys cmd/netkeys/main.go
-```
+NetKeys can also be obtained as a single file binary from the releases
+page on GitHub for i686 and x86_64 targets.
 
 Now you can install `NetKeys`.
 
