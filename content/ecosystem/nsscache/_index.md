@@ -26,18 +26,8 @@ you are strongly encouraged to use this, though if your distribution
 happens to be Debian derived, make sure you're getting a version
 that's somewhat recent.
 
-If your distribution does not provide `nsscache`, you'll need to
-build it from source.  It is assumed that you have a Go installation
-of version 1.10 or later and the `dep` Go dependency manager.
-
-Now you can build `nsscache`:
-
-```
-$ git clone -b <version> https://github.com/NetAuth/nsscache
-$ cd nsscache
-$ dep ensure
-$ go build -o nsscache cmd/nsscache/main.go
-```
+You can also obtain precompiled binaries from the releases page on
+GitHub.
 
 Now you can install `nsscache`.
 
