@@ -6,7 +6,7 @@ date: 2018-09-12T23:35:52-07:00
 Thanks for your interest in the NetAuth project.  If you want to
 contact the developers, you can get in touch in several ways.
 
-  * You can join us on FreeNode in `#netauth` and `#netauth-dev`.
+  * You can join us on Libera in `#netauth` and `#netauth-dev`.
   * You can open an issue [on GitHub](https://github.com/NetAuth/NetAuth/issues)
   * You can send us an email at `contact@netauth.org`
 
