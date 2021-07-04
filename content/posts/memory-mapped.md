@@ -38,4 +38,5 @@ In large deployments this should show a dramatic speed improvement,
 and should also improve speed during system startup when in-memory
 indexes are generated.  The `filesystem` backend remains supported at
 this time, and will not be removed in favor of the `bitcask` backend.
+The new `bitcask` backend is not available on Windows builds.
 
