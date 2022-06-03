@@ -30,35 +30,37 @@ on GitHub after 0.1.0.  Running versions prior to 0.1.0 in production
 is discouraged.
 
 If you would prefer to compile NetAuth instead, you can compile it
-with Go 1.11 or better:
+with Go 1.17 or better:
 
 ```shell
 $ git clone -b <version> https://github.com/netauth/netauth
 $ cd netauth
-$ go build -o netauthd cmd/netauthd/main.go
-$ go build -o netauth cmd/netauth/main.go
+$ go build -o netauthd github.com/netauth/netauth/cmd/netauthd/
+$ go build -o netauth github.com/netauth/netauth/cmd/netauth/
+$ go build -o nsutil github.com/netauth/netauth/cmd/nsutil/
 ```
 
 This will produce a pair of executable files `netauth` and `netauthd`.
-Per convention, `netauthd` is the server executable.  You may copy
-these to where your system keeps user installed applications for
-secure use, usually `/usr/local/sbin`.
+Per convention, `netauthd` is the server executable.  The third
+utility, `nsutil` is a server utility that performs certain
+bootstrapping tasks.  You may copy these to where your system keeps
+user installed applications for secure use, usually `/usr/local/sbin`.
 
 You can also obtain both the server and command line client in Docker
 container format from the GitHub Container Registry.  The containers
 may be pulled as shown below:
 
 ```
-$ docker pull ghcr.io/netauth/netauth:v0.4.0-rc1
-$ docker pull ghcr.io/netauth/netauthd:v0.4.0-rc1
+$ docker pull ghcr.io/netauth/netauth:v0.6.1
+$ docker pull ghcr.io/netauth/netauthd:v0.6.1
 ```
 
 To make the containerized versions behave like local binaries, the
 following aliases may be employed (adjust the version as needed):
 
 ```
-$ alias netauth="docker run --rm -it -v $PWD/config.toml:/etc/netauth/config.toml -e USER=admin --network host ghcr.io/netauth/netauth:v0.4.0-rc1"
-$ alias netauthd="docker run --rm -it -v $PWD/config.toml:/etc/netauth/config.toml --network host ghcr.io/netauth/netauthd:v0.4.0-rc1"
+$ alias netauth="docker run --rm -it -v $PWD/config.toml:/etc/netauth/config.toml -e USER=admin --network host ghcr.io/netauth/netauth:v0.6.1
+$ alias netauthd="docker run --rm -it -v $PWD/config.toml:/etc/netauth/config.toml --network host ghcr.io/netauth/netauthd:v0.6.1"
 ```
 
 Note that some things don't work normally in the docker containers:
@@ -84,77 +86,91 @@ A config file for this demo should be created with the following content:
 
 ```toml
 [core]
-  home="tmp"
-[tls]
-  pwn_me = true
+  home = "data"
+[crypto]
+  backend = "bcrypt"
+[db]
+  backend = "filesystem"
 ```
 
 ### Certificates
 
 Remember that NetAuth is dealing with secure information.  This
 information must be protected while in transit, and NetAuth uses TLS
-to ensure this security.  While TLS is a must for a production setup,
-it can be annoying to deal with while doing a local demo or otherwise
-just trying out NetAuth.  If you want to turn off TLS and understand
-the risks that are associated with this the `--tls.PWN_ME` flag can be
-used to disable TLS.
+to ensure this security.  For this quick demo we can use a helper
+function from `nsutil` to generate some certificates, but for
+production use you should create and manage your certificates with
+some more comprehensive certificate management infrastructure.
 
-This flag is no joke, you will be sending passwords in the clear.
-Anyone on your network with the knowhow to do so can sniff these
-passwords and use them.  Don't run without TLS for anything more than
-a toy demo, and even then consider against it since tools like `cfssl`
-make it very easy to generate certificates!
+To create the certificates, run the following commands:
+
+```shell
+$ mkdir -p data keys
+$ nsutil certgen localhost
+$ mv tls.* keys
+```
+
+You can pass an arbitrary number of IP addresses and hostnames to the
+`nsutil certgen` command and they will be included in the generated
+certificate.
 
 ## 5 Minute Demo
 
 Lets do a 5 minute demo where we start a NetAuth server, add an entity
 and a group, and authenticate as that entity:
 
+### Create the Initial Admin User
+
+To create the initial admin user we will use `nsutil bootstrap` to
+create the first user and provide them with the root capability
+required to manage the server.
+
+```shell
+$ nsutil bootstrap admin
+```
+
+You will be prompted for a password to set for the user.  An important
+note to make here is that the ID 'root' will collide with the
+administrative user on most Linux systems.  To combat this collision
+if you want to use the ID 'root' it is recommended to instead use
+'_root' which will not collide.  In general though, a user ID that is
+not `root` is generally a better choice.
+
+### Generate Signing Keys
+
+You will need to create some keys to use with the token issuing
+subsystem.  To generate these keys with `nsutil`, use the following
+commands:
+
+```shell
+$ nsutil keygen rsa 2048
+$ mv rsa.privkey keys/rsa-private.tokenkey
+$ mv rsa.pubkey keys/rsa-public.tokenkey
+```
+
 ### Starting the server
 
 Open a terminal and start the NetAuth server with the options as shown:
 
 ```bash
-$ netauthd --tls.PWN_ME --token.jwt.generate --server.bootstrap admin:admin
+$ netauthd
 ```
 
-This will start your server and generate a set of keys that can be
-used for issuing tokens.  The server is bootstrapped with an entity of
-ID 'admin' and authenticated with the secret 'admin'.  An important
-note to make here is that the ID 'root' will collide with the
-administrative user on most Linux systems.  To combat this collision
-if you want to use the ID 'root' it is recommended to instead use
-'_root' which will not collide.  The log scroll should look something
-like the following:
+This will start the server and make it ready for serving requests.
+The log will look something like this:
 
 ```text
-2020-08-26T21:25:59.827-0700 [INFO]  netauthd: NetAuth server is starting!
-2020-08-26T21:25:59.827-0700 [INFO]  netauthd.crypto: Registered Backend: backend=bcrypt
-2020-08-26T21:25:59.828-0700 [INFO]  netauthd.db: Initializing database backend: backend=ProtoDB
-2020-08-26T21:25:59.828-0700 [INFO]  netauthd.db: Database callback registered: callback=BleveIndexer
-2020-08-26T21:25:59.828-0700 [INFO]  netauthd: Database initialized: backend=ProtoDB
-2020-08-26T21:25:59.828-0700 [INFO]  netauthd.crypto: Initializing backend: backend=bcrypt
-2020-08-26T21:25:59.828-0700 [INFO]  netauthd: Beginning Bootstrap
-2020-08-26T21:26:04.539-0700 [INFO]  netauthd.tree: Bootstrap disabled
-2020-08-26T21:26:04.539-0700 [INFO]  netauthd: Bootstrap complete
-2020-08-26T21:26:04.539-0700 [INFO]  netauthd.tree: Bootstrap disabled
-2020-08-26T21:26:04.539-0700 [ERROR] netauthd.token.jwt-rsa: File contains no key!: file=keys/token.pem
-2020-08-26T21:26:04.812-0700 [INFO]  netauthd: Token backend successfully initialized: backend=jwt-rsa
-2020-08-26T21:26:04.812-0700 [WARN]  netauthd: ===================================================================
-2020-08-26T21:26:04.812-0700 [WARN]  netauthd:   WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
-2020-08-26T21:26:04.812-0700 [WARN]  netauthd: ===================================================================
-2020-08-26T21:26:04.812-0700 [WARN]  netauthd:
-2020-08-26T21:26:04.812-0700 [WARN]  netauthd: Launching without TLS! Your passwords will be shipped in the clear!
-2020-08-26T21:26:04.812-0700 [WARN]  netauthd: Seriously, the option is --PWN_ME for a reason, you're trusting the
-2020-08-26T21:26:04.812-0700 [WARN]  netauthd: network fabric with your authentication information, and this is a
-2020-08-26T21:26:04.812-0700 [WARN]  netauthd: bad idea.  Anyone on your local network can get passwords, tokens,
-2020-08-26T21:26:04.812-0700 [WARN]  netauthd: and other secure information.  You should instead obtain a
-2020-08-26T21:26:04.812-0700 [WARN]  netauthd: certificate and key and start the server with those.
-2020-08-26T21:26:04.812-0700 [WARN]  netauthd:
-2020-08-26T21:26:04.812-0700 [WARN]  netauthd: ===================================================================
-2020-08-26T21:26:04.812-0700 [WARN]  netauthd:   WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
-2020-08-26T21:26:04.812-0700 [WARN]  netauthd: ===================================================================
-2020-08-26T21:26:04.813-0700 [INFO]  netauthd: Ready to Serve...
+2022-06-02T23:10:58.282-0500 [INFO]  netauthd: NetAuth server is starting!
+2022-06-02T23:10:58.282-0500 [INFO]  netauthd.crypto: Registered Backend: backend=bcrypt
+2022-06-02T23:10:58.282-0500 [INFO]  netauthd.db: Registered KV Store: kv=bitcask
+2022-06-02T23:10:58.282-0500 [INFO]  netauthd.db: Registered KV Store: kv=filesystem
+2022-06-02T23:10:58.282-0500 [INFO]  netauthd.db: Database callback registered: callback=BleveSearch
+2022-06-02T23:10:58.282-0500 [INFO]  netauthd: Database initialized: backend=filesystem
+2022-06-02T23:10:58.282-0500 [INFO]  netauthd.crypto: Initializing backend: backend=bcrypt
+2022-06-02T23:10:58.282-0500 [INFO]  netauthd.db: Database callback registered: callback=entity-resolver
+2022-06-02T23:10:58.282-0500 [INFO]  netauthd.db: Database callback registered: callback=group-resolver
+2022-06-02T23:10:58.283-0500 [INFO]  netauthd: Token backend successfully initialized: backend=jwt-rsa
+2022-06-02T23:10:58.284-0500 [INFO]  netauthd: Ready to Serve...
 ```
 
 We can confirm the claim made in the last line by invoking the system
@@ -172,9 +188,6 @@ status:
 ```shell
 $ netauth system status
 Server Status: [PASS]
-
-[PASS]  ProtoDB      ProtoDB is operating normally
-[PASS]  TKN_JWT-RSA  JWT-RSA TokenService is ready to issue/verify tokens
 ```
 
 ### Using NetAuth
@@ -273,15 +286,25 @@ This token was issued to 'entity1'
 From the server's perspective, here's what happened:
 
 ```text
-2020-08-26T21:30:59.079-0700 [INFO]  netauthd.rpc2: Authentication Succeeded: entity=admin service=netauth client=theGibson
-2020-08-26T21:31:32.591-0700 [INFO]  netauthd.rpc2: Authentication Succeeded: entity=admin service=netauth client=theGibson
-2020-08-26T21:31:32.594-0700 [INFO]  netauthd.rpc2: Token Issued: entity=admin capabilities=[0] service=netauth client=theGibson
-2020-08-26T21:32:14.322-0700 [INFO]  netauthd.rpc2: Entity Created: entity=entity1 authority=admin service=netauth client=theGibson error=<nil>
-2020-08-26T21:32:31.430-0700 [INFO]  netauthd.rpc2: Dumped Entity Info: entity=entity1 service=netauth client=theGibson
-2020-08-26T21:32:54.683-0700 [INFO]  netauthd.rpc2: Group Created: group=group1 authority=admin service=netauth client=theGibson error=<nil>
-2020-08-26T21:33:28.342-0700 [INFO]  netauthd.rpc2: Group Info: group=group1 service=netauth client=theGibson error=<nil>
-2020-08-26T21:34:31.783-0700 [INFO]  netauthd.rpc2: Authentication Succeeded: entity=entity1 service=netauth client=theGibson
-2020-08-26T21:34:31.788-0700 [INFO]  netauthd.rpc2: Token Issued: entity=entity1 capabilities=[] service=netauth client=theGibson
+2022-06-02T23:15:17.956-0500 [INFO]  netauthd: NetAuth server is starting!
+2022-06-02T23:15:17.956-0500 [INFO]  netauthd.crypto: Registered Backend: backend=bcrypt
+2022-06-02T23:15:17.956-0500 [INFO]  netauthd.db: Registered KV Store: kv=bitcask
+2022-06-02T23:15:17.956-0500 [INFO]  netauthd.db: Registered KV Store: kv=filesystem
+2022-06-02T23:15:17.956-0500 [INFO]  netauthd.db: Database callback registered: callback=BleveSearch
+2022-06-02T23:15:17.956-0500 [INFO]  netauthd: Database initialized: backend=filesystem
+2022-06-02T23:15:17.956-0500 [INFO]  netauthd.crypto: Initializing backend: backend=bcrypt
+2022-06-02T23:15:17.956-0500 [INFO]  netauthd.db: Database callback registered: callback=entity-resolver
+2022-06-02T23:15:17.956-0500 [INFO]  netauthd.db: Database callback registered: callback=group-resolver
+2022-06-02T23:15:17.957-0500 [INFO]  netauthd: Token backend successfully initialized: backend=jwt-rsa
+2022-06-02T23:15:17.958-0500 [INFO]  netauthd: Ready to Serve...
+2022-06-02T23:15:35.252-0500 [INFO]  netauthd: Authentication Succeeded: entity=admin service=netauth client=theGibson
+2022-06-02T23:15:35.255-0500 [INFO]  netauthd: Token Issued: entity=admin capabilities=[0] service=netauth client=theGibson
+2022-06-02T23:17:52.123-0500 [INFO]  netauthd: Entity Created: entity=entity1 authority= service=netauth client=theGibson error=<nil>
+2022-06-02T23:18:01.122-0500 [INFO]  netauthd: Dumped Entity Info: entity=entity1 service=netauth client=theGibson
+2022-06-02T23:18:15.453-0500 [INFO]  netauthd: Group Created: group=group1 authority= service=netauth client=theGibson error=<nil>
+2022-06-02T23:18:24.502-0500 [INFO]  netauthd: Group Info: group=group1 service=netauth client=theGibson error=<nil>
+2022-06-02T23:19:01.082-0500 [INFO]  netauthd: Authentication Succeeded: entity=entity1 service=netauth client=theGibson
+2022-06-02T23:19:01.087-0500 [INFO]  netauthd: Token Issued: entity=entity1 capabilities=[] service=netauth client=theGibson
 ```
 
 There's plenty more that NetAuth is capable of, this is just a 5
