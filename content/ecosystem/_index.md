@@ -42,11 +42,22 @@ Need to obtain keys from NetAuth for another system?  NetKeys can do
 this and is an ideal drop in to use with OpenSSH's
 AuthorizedKeysCommand.
 
+## [Buildbot](https://github.com/classabbyamp/buildbot-netauth)
+
+Need to authenticate to your Buildbot installation? Buildbot-netauth
+allows Buildbot to communicate directly with NetAuth for login and
+user information.
+
 ## [Plugins](plugin)
 
 The core server can be extended by using plugins to augment the
 default behavior.  Plugins can either change built-in behaviors, or
 can propagate events to external systems.
+
+## [Python](https://github.com/NetAuth/netauth-python)
+
+NetAuth can be easily integrated into Python-based applications with
+the `netauth` Python library.
 
 ## [Raw gRPC](https://github.com/NetAuth/Protocol)
 
